@@ -4,7 +4,7 @@ import hmac
 import base64
 from db import mongo
 from flask import Blueprint, request, session, jsonify
-from utils import json_response
+from utils import json_response, validate_name, validate_password, validate_login
 
 auth = Blueprint('auth', __name__)
 
@@ -15,8 +15,15 @@ Users = db['Users']
 @auth.route('/register', methods=["POST"])
 def registration():
 	body = request.get_json()
-	if 'login' not in body or type(body['login']) is not str or 'password' not in body or type(body['password']) is not str:
-		return json_response({"message": "BAD_PARAMS"}, 400)
+	keys = ['login', 'password', 'name']
+	for key in body.keys():
+		if key not in keys:
+			return json_response({"message": "INVALID_ARGS"}, 400)
+		func_name = f'validate_{key}'
+		func = globals()[func_name]
+		if type(body[key]) is not str or not func(body[key]):
+			return json_response({"message": f'INVALID_{key.upper()}'}, 400)
+
 	user = Users.find_one({"login": body['login']})
 	if user:
 		return json_response({"message": "USER_ALREADY_EXISTS"}, 400)
@@ -26,7 +33,7 @@ def registration():
 	
 	salt_b64 = base64.b64encode(salt).decode('utf-8')
 	pw_hash_b64 = base64.b64encode(pw_hash).decode('utf-8')
-	
+
 	Users.insert_one({"login": body['login'], "salt": salt_b64, "hash": pw_hash_b64})
 	return json_response()
 
