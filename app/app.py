@@ -12,8 +12,8 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")  # needed for cryptography(e
 #app.permanent_session_lifetime = timedelta(days=30)
 
 
-#app.config['MONGO_URI'] = os.environ.get("MONGO_CONNECTION_STRING")
-app.config['MONGO_URI'] = "mongodb+srv://hashtronaut:sgUIEV7ezdjP5MbU@cluster0.ssrditb.mongodb.net/?retryWrites=true&w=majority"
+app.config['MONGO_URI'] = os.environ.get("MONGO_CONNECTION_STRING")
+#app.config['MONGO_URI'] = "mongodb+srv://hashtronaut:sgUIEV7ezdjP5MbU@cluster0.ssrditb.mongodb.net/?retryWrites=true&w=majority"
 mongo.init_app(app) # initialize here!
 
 

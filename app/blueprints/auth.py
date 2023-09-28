@@ -30,29 +30,29 @@ def registration():
 	Users.insert_one({"login": body['login'], "salt": salt_b64, "hash": pw_hash_b64})
 	return json_response()
 
-# @auth.route('/login', methods=["POST"])
-# def login():
-# 	body = request.get_json()
-# 	if 'login' not in body or body['login'] is not str or 'password' not in body or body['password'] is not str:
-# 		return jsonify({"status": 400, "message": "BAD_PARAMS"})
-# 	user = Users.find_one({"login": body['login']})
-# 	if not user:
-# 		return jsonify({"status": 400, "message": "USER_NOT_EXISTS"})
-# 	stored_salt = base64.b64decode(sole)
-# 	stored_hashed_password = base64.b64decode(pwhash)
+@auth.route('/login', methods=["POST"])
+def login():
+	body = request.get_json()
+	if 'login' not in body or body['login'] is not str or 'password' not in body or body['password'] is not str:
+		return jsonify({"status": 400, "message": "BAD_PARAMS"})
+	user = Users.find_one({"login": body['login']})
+	if not user:
+		return jsonify({"status": 400, "message": "USER_NOT_EXISTS"})
+	stored_salt = base64.b64decode(sole)
+	stored_hashed_password = base64.b64decode(pwhash)
 
-# 	# Recompute the hash for the provided password and stored salt
-# 	new_hashed_password = hashlib.pbkdf2_hmac(
-# 		'sha256', 
-# 		password.encode(), 
-# 		stored_salt, 
-# 		100000  # Use the same number of iterations as during registration
-# 	)
+	# Recompute the hash for the provided password and stored salt
+	new_hashed_password = hashlib.pbkdf2_hmac(
+		'sha256', 
+		password.encode(), 
+		stored_salt, 
+		100000  # Use the same number of iterations as during registration
+	)
 
-# 	# Compare the new hash with the stored hash
-# 	if new_hashed_password == stored_hashed_password:
-# 		print("Matching")
-# 	else:
-# 		print("Not matching")
-# 	return new_hashed_password == stored_hashed_password
+	# Compare the new hash with the stored hash
+	if new_hashed_password == stored_hashed_password:
+		print("Matching")
+	else:
+		print("Not matching")
+	return new_hashed_password == stored_hashed_password
 
