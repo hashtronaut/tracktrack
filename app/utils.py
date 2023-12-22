@@ -25,7 +25,7 @@ toJson = JSONEncoder()
 
 
 def validate_password(password):
-    return re.match(r'^[A-Z]+[a-z]+[\W_]+.{6,23}$', password)
+    return re.match(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_])(?=.*\d).{6,23}$', password)
 
 def validate_login(login):
     return re.match(r'^[a-zA-Z0-9]{3,12}$', login)
@@ -33,7 +33,7 @@ def validate_login(login):
 def validate_name(name):
     if type(name) is not str:
         return False
-    return re.match('[A-Za-zА-Яа-я]?', name)
+    return re.match(r'[A-Za-zА-Яа-я]?', name)
 
 def json_response(data=None, status=200):
     headers = {'Content-Type':'application/json'}
